@@ -52,7 +52,7 @@ class PowerSeries:
     def __add__(self, other : 'PowerSeries') -> 'PowerSeries':
         match other:
             case PowerSeries():
-                f = lambda i: self.f(i) + f(i)
+                f = lambda i: self.f(i) + other.f(i)
             case Number():
                 f = lambda i: self.f(i) + other if i == 0 else self.f(i)
         return PowerSeries(f=f)
