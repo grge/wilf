@@ -16,6 +16,9 @@ class RV:
     def var(self):
         return self.moment(2) - self.mean() ** 2
 
+    def std(self):
+        return self.var() ** 0.5
+
     def __add__(self, other: 'RV') -> 'RV':
         return RV(self.cf * other.cf)
 
