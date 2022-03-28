@@ -4,15 +4,12 @@ A toy probabilistic programming tool built around characteristic functions.
 
 ```python
     # Create two normal RVs
-    mu1, std1, mu2, std2 = wilf.vars('mu1', 'std1', 'mu2', 'std2')
-    x = wilf.normal(mean=mux, std=stdx)
-    y = wilf.normal(mean=muy, std=stdy)
+    x = wilf.normal(mean=1, std=1)
+    y = wilf.normal(mean=4, std=2)
     # Get the sum of the two as a new RV
     z = x + y
-    # Fit to data
-    z.fit(data)
-    # print the fitted means
-    print(z.vars['mu1'], z.vars['mu2'])
+    # print the mean and variance of the new RV
+    print(z.mean(), z.var())
 ```
 ## TODO
 
