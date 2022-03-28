@@ -47,7 +47,7 @@ def uniform(a, b) -> RV:
 def normal(m, s) -> RV:
     return RV(exp((1J * x * m) - (0.5 * s**2 * x**2)))
 
-def exp(l) -> RV:
+def exponential(l) -> RV:
     return RV(1/(1 - 1J * x * 1/l))
 
 def gamma(k, theta) -> RV:
