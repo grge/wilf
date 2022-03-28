@@ -9,9 +9,10 @@ A toy probabilistic programming tool built around characteristic functions.
     y = wilf.normal(mean=muy, std=stdy)
     # Get the sum of the two as a new RV
     z = x + y
-    # calculate the mean and variance
-    z.fit('data')
-    print(z.mean(), z.var())
+    # Fit to data
+    z.fit(data)
+    # print the fitted means
+    print(z.vars['mu1'], z.vars['mu2'])
 ```
 ## TODO
 
