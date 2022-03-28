@@ -26,6 +26,7 @@ A toy probabilistic programming tool built around characteristic functions.
 * [ ] It could be nice to extend the PowerSeries class to a Polynomial class
       in which the maximum degree is explicitly defined. This could then be used
       to define systems of polynomial equations, algebraic varieties, and all sorts of cool things from computational algebraic geometry.
+* [ ] Look into techniques to improve numerical stability.
 
 ## References
 
