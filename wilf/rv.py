@@ -39,7 +39,7 @@ def uniform(a, b) -> RV:
     return RV(((1j * b * x).exp()  - (1j * a * x).exp()) / (1j * x * (b - a)))
 
 def normal(m, s) -> RV:
-    return RV(((1J - x - m) - (0.5 * s**2 * x**2)).exp())
+    return RV(((1J * x * m) - (0.5 * s**2 * x**2)).exp())
 
 def exp(l) -> RV:
     return RV(1/(1 - 1J * x * 1/l))
