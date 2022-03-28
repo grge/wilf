@@ -51,3 +51,4 @@ A toy probabilistic programming tool built around characteristic functions.
 * https://www.webdepot.umontreal.ca/Usagers/carrascm/MonDepotPublic/carrascm/Carrasco_Kotchoni_ET2017.pdf
 * Carrasco, M., & Kotchoni, R. (2017). Efficient estimation using the characteristic function. Econometric Theory, 33(2), 479-526. https://www.webdepot.umontreal.ca/Usagers/carrascm/MonDepotPublic/carrascm/Carrasco_Kotchoni_ET2017.pdf
 * u, J. (2004). Empirical characteristic function estimation and its applications. Econometric reviews, 23(2), 93-123. http://www.mysmu.edu/faculty/yujun/Research/YuER.pdf
+* https://www.researchgate.net/profile/Serge-Provost/publication/242782657_Moment-Based_Density_Approximants/links/5418b2510cf203f155adb50f/Moment-Based-Density-Approximants.pdf
