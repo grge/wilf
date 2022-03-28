@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from numbers import Number
 from typing import List
 
-from wilf.powerseries import PowerSeries
+from wilf.powerseries import PowerSeries, exp, derivative
 
 @dataclass
 class RV:
@@ -11,7 +11,7 @@ class RV:
     cf : PowerSeries
 
     def moment(self, k:int) -> float:
-        return (1j ** (-k)) * self.cf.derivative(k).f(0)
+        return (1j ** (-k)) * derivative(self.cf, k).f(0)
 
     def mean(self):
         return self.moment(1)
@@ -36,16 +36,16 @@ x = PowerSeries.x
 # fundamentally the same, but will need some explicit discretisation of the
 # random variates generated, which I will worry about how to do later on.
 def binomial(n, p) -> RV:
-    return RV((1 - p + p * (x * 1j).exp())**n)
+    return RV(exp(1 - p + p * (x * 1j))**n)
 
 def poisson(l) -> RV:
-    return RV((((x * 1j).exp() - 1) * l).exp())
+    return RV(exp((exp(x * 1j) - 1) * l))
 
 def uniform(a, b) -> RV:
-    return RV(((1j * b * x).exp()  - (1j * a * x).exp()) / (1j * x * (b - a)))
+    return RV((exp(1j * b * x) - exp(1j * a * x)) / (1j * x * (b - a)))
 
 def normal(m, s) -> RV:
-    return RV(((1J * x * m) - (0.5 * s**2 * x**2)).exp())
+    return RV(exp((1J * x * m) - (0.5 * s**2 * x**2)))
 
 def exp(l) -> RV:
     return RV(1/(1 - 1J * x * 1/l))
@@ -54,4 +54,4 @@ def gamma(k, theta) -> RV:
     return RV((1 - 1j*x*theta)**(-k))
 
 def empirical(data : List[Number]) -> RV:
-    return RV(sum((1J * x * data[i]).exp() for d in data)/len(data))
+    return RV(sum(exp(1J * x * d) for d in data)/len(data))

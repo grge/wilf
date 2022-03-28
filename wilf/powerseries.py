@@ -125,19 +125,6 @@ class PowerSeries:
 
         return self._pow_cache.setdefault(other, pow(other))
 
-    def exp(self) -> 'PowerSeries':
-        a = self.f(0)
-        q = self - a
-        ea = cmath.exp(a)
-        def fact(n: int):
-            return product(range(1, n+1))
-        return PowerSeries(lambda n: sum((q**i).f(n) / fact(i) for i in range(n+1)) * ea)
-
-    def derivative(self, n:int = 1) -> 'PowerSeries':
-        def f(k: int):
-            return product(range(k + 1, k + n + 1)) * self.f(k + n)
-        return PowerSeries(f=f)
-        
     @classmethod
     @property
     def one(cls):
@@ -154,3 +141,26 @@ class PowerSeries:
     @property
     def e(cls):
         return cls.one.exp()
+
+
+def derivative(x:PowerSeries, n:int = 1) -> 'PowerSeries':
+    def f(k: int):
+        return product(range(k + 1, k + n + 1)) * x.f(k + n)
+    return PowerSeries(f=f)
+
+
+def exp(x : PowerSeries) -> PowerSeries:
+    a = x.f(0)
+    q = x - a
+    ea = cmath.exp(a)
+    def fact(n: int):
+        return product(range(1, n+1))
+    return PowerSeries(lambda n: sum((q**i).f(n) / fact(i) for i in range(n+1)) * ea)
+
+
+def cos(x: PowerSeries) -> PowerSeries:
+    return (exp(1j * x) + exp(-1j * x)) / 2
+
+
+def sin(x: PowerSeries) -> PowerSeries:
+    return (exp(1j * x) - exp(-1j * x)) / 2j

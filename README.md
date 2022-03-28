@@ -16,7 +16,6 @@ A toy probabilistic programming tool built around characteristic functions.
 ### rv.py
 * [ ] Implement RV.cdf() RV.pdf(), RV.rvs()
 * [ ] Implement __mul__, __pow__, __div__, etc
-* [ ] Empirical characteristic function 
 * [ ] Add explicit support for discrete distributions
 * [ ] Multivariate constructions (joint, marginal, conditional)
 * [ ] Conversion of MGFs or probability generating functions?
