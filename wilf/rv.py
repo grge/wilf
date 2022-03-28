@@ -1,4 +1,7 @@
 from dataclasses import dataclass
+from numbers import Number
+from typing import List
+
 from wilf.powerseries import PowerSeries
 
 @dataclass
@@ -49,3 +52,6 @@ def exp(l) -> RV:
 
 def gamma(k, theta) -> RV:
     return RV((1 - 1j*x*theta)**(-k))
+
+def empirical(data : List[Number]) -> RV:
+    return RV(sum((1J * x * data[i]).exp() for d in data)/len(data))
