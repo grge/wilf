@@ -46,7 +46,6 @@ class SymbolicExpression(ABC):
             else:
                 new_dict[k] = subs_expr(v, subs, simplify=simplify)
         new_expr = self.__class__(**new_dict)
-        print(new_expr)
         if simplify:
             return simplify_expr(new_expr)
         else:
@@ -55,6 +54,9 @@ class SymbolicExpression(ABC):
 Expression = SymbolicExpression | Number
 
 def subs_expr(expr:'Expression', subs: 'Dict[Symbol, Expression]', simplify: bool = True) -> 'Expression':
+    if expr in subs:
+        return subs[expr]
+
     match expr:
         case SymbolicExpression():
             return expr.subs(subs, simplify=simplify)
@@ -101,6 +103,9 @@ class Sum(SymbolicExpression):
             else:
                 self.terms += (t,)
 
+    def __hash__(self):
+        return hash(self.terms)
+
     def __str__(self):
         return " + ".join(map(str, self.terms))
 
@@ -139,6 +144,9 @@ class Product(SymbolicExpression):
             else:
                 self.terms += (t,)
 
+    def __hash__(self):
+        return hash(self.terms)
+
     def __str__(self):
         return " * ".join(map(str, self.terms))
 
@@ -163,7 +171,7 @@ class Product(SymbolicExpression):
             else:
                 return Product(numeric_term, *non_numeric_terms)
 
-@dataclass
+@dataclass(frozen=True)
 class Power(SymbolicExpression):
     base : Expression
     exponent : Expression
@@ -193,7 +201,7 @@ class Power(SymbolicExpression):
         else:
             return Power(base_s, exponent_s)
 
-@dataclass
+@dataclass(frozen=True)
 class Fraction(SymbolicExpression):
     numerator : Expression
     denominator : Expression

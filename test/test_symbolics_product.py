@@ -83,12 +83,12 @@ def test_simplified_product_has_numbers_first():
     p = Product(x, 2).simplify()
     assert p.terms == (2, x)
 
-def test_sum_with_symbol_simplifies_numeric_terms():
+def test_product_with_symbol_simplifies_numeric_terms():
     x = Symbol('x')
     p = Product(1, x, 1, 2).simplify()
     assert p.terms == (2, x)
 
-def test_sum_of_sums_with_symbols_simplifies_to_flat():
+def test_nested_product_with_symbols_simplifies_to_flat():
     x = Symbol('x')
     y = Symbol('y')
     s = Product(Product(3, x), Product(2, y)).simplify()
