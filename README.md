@@ -34,15 +34,21 @@ A toy probabilistic programming tool built around characteristic functions.
     - This will require having power series with symbols. The naive approach would be to do something like maximum likelihood estimation, but there appears to be other approaches in the literature based around the empirical characteristic function.
     - As of 2022-03-29, I have implemented a basic symbolic computer algebra system, and modified the powerseries implementation so that the coefficient functions have be Expression valued. Not yet confirmed to be working for all functionality, but it is a promising start.
 
+* [ ] Prior distributions for model parameters
+    - I currently have no idea how to do this. Probably possible, but I don't know how yet. Would they need to be conjugate? Probably not?
+
 * [ ] Multivariate constructions (joint, marginal, conditional)
 
 * [ ] Conversion of MGFs or probability generating functions?
     - Maybe not all that useful. This is not a priority.
 
+* [ ] Methods like .mean() and .var() should probably just return the Real component.
+
 
 ### powerseries.py
-* [ ] Write tests for PowerSeries
-* [ ] Confirm PowerSeries works for complex coefficients
+* [x] Tests
+* [x] Confirm PowerSeries works for complex coefficients
+* [x] Integration of symbolic expressions
 * [ ] It could be nice to extend the PowerSeries class to a Polynomial class
       in which the maximum degree is explicitly defined. This could then be used
       to define systems of polynomial equations, algebraic varieties, and all sorts of cool things from computational algebraic geometry.
@@ -50,6 +56,7 @@ A toy probabilistic programming tool built around characteristic functions.
 
 
 ### symbolics.py
+* [x] Tests
 * [ ] Better __str__. Currently only works for simple expressions, and not at all for nested expressions.
 * [ ] Some symbolic representation of basic functions are going to be needed. E.g., in powerseries.exp, there is a call to cmath.exp that currently fails when the argument is an Expression. To get around this I need an wilf.symbolics.exp. Probably also log, sin, and cos. Probably others.
 * [ ] Rational simplification - Automatically reduce rationals to their lowest terms
