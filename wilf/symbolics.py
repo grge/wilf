@@ -9,8 +9,14 @@ class SymbolicExpression(ABC):
     def __mul__(self, other : 'Expression') -> 'Expression':
         return Product(self, other).simplify()
 
+    def __rmul__(self, other : 'Expression') -> 'Expression':
+        return Product(other, self).simplify()
+
     def __add__(self, other : 'Expression') -> 'Expression':
         return Sum(self, other).simplify()
+
+    def __radd__(self, other : 'Expression') -> 'Expression':
+        return Sum(other, self).simplify()
     
     def __sub__(self, other : 'Expression') -> 'Expression':
         return Sum(self, -other).simplify()
