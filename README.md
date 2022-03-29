@@ -11,18 +11,38 @@ A toy probabilistic programming tool built around characteristic functions.
     # print the mean and variance of the new RV
     print(z.mean(), z.var())
 ```
+
+
+## Features
+
+
 ## TODO
 
 ### rv.py
 * [ ] Implement RV.cdf() RV.pdf(), RV.rvs()
+    - One approach would be to get an explicit PowerSeries representatiof the PDF by inverting the characteristic function. I would like this to be possible, but I haven't worked it out yet. Note that is probably not straight forward to generate samples from the PowerSeries PDF representation, because of numerical instability issues.
+    - Another approach is to construct an approximation of the CDF using the first n moments. There is some literature on this available on this. Currently I think this approach is the best option.
+    - Another option is to generate samples directly from the characteristic function, using rejection sampling. There is some literature available, but I am not sure if the technique is general enough to work on arbitrary RVs.
+
 * [ ] Implement __mul__, __pow__, __div__, etc
+    - At this stage I'm not sure what is possible. Maybe it is only realistic to support linear / affine functions of RVs.
+
 * [ ] Add explicit support for discrete distributions
+    - Most of the code already works for discrete distributions. It is only when I have implemented .cdf, .pdf and .rvs that I will need to have some explicit code for dealing with the discretisation.
+
+* [ ] Inference.
+    - This will require having power series with symbols. The naive approach would be to do something like maximum likelihood estimation, but there appears to be other approaches in the literature based around the empirical characteristic function.
+
 * [ ] Multivariate constructions (joint, marginal, conditional)
+
 * [ ] Conversion of MGFs or probability generating functions?
+    - Maybe not all that useful. This is not a priority.
+
 
 ### powerseries.py
 * [ ] Write tests for PowerSeries
 * [ ] Confirm PowerSeries works for complex coefficients
+* [ ] Support symbols in PowerSeries
 * [ ] It could be nice to extend the PowerSeries class to a Polynomial class
       in which the maximum degree is explicitly defined. This could then be used
       to define systems of polynomial equations, algebraic varieties, and all sorts of cool things from computational algebraic geometry.
