@@ -61,3 +61,8 @@ def test_simplify_with_one_base():
     assert p == 1
     p = Power(1, Symbol('x')).simplify()
     assert p == 1
+
+def test_simplify_no_numeric():
+    p = Power(Symbol('x'), Symbol('y')).simplify()
+    assert p.base == Symbol('x')
+    assert p.exponent == Symbol('y')

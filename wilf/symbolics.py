@@ -1,40 +1,31 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from numbers import Number
-from typing import Dict, List, Tuple
+from typing import Dict, Tuple
 
 from wilf.utils import product
 
 class SymbolicExpression(ABC):
     def __mul__(self, other : 'Expression') -> 'Expression':
-        return Product(self, other)
-
-    def __rmul__(self, other : 'Expression') -> 'Expression':
-        return Product(other, self)
+        return Product(self, other).simplify()
 
     def __add__(self, other : 'Expression') -> 'Expression':
-        return Sum(self, other)
+        return Sum(self, other).simplify()
     
-    def __radd__(self, other : 'Expression') -> 'Expression':
-        return Sum(other, self)
-
     def __sub__(self, other : 'Expression') -> 'Expression':
-        return Sum(self, -other)
+        return Sum(self, -other).simplify()
     
-    def __rsub__(self, other : 'Expression') -> 'Expression':
-        return Sum(other, -self)
-
     def __pow__(self, other : 'Expression') -> 'Expression':
-        return Power(self, other)
+        return Power(self, other).simplify()
 
     def __neg__(self) -> 'Expression':
-        return Product(-1, self)
+        return Product(-1, self).simplify()
 
     def __truediv__(self, other : 'Expression') -> 'Expression':
-        return Fraction(self, other)
+        return Fraction(self, other).simplify()
 
     def __rtruediv__(self, other : 'Expression') -> 'Expression':
-        return Fraction(other, self)
+        return Fraction(other, self).simplify()
 
 
     @abstractmethod
@@ -44,14 +35,17 @@ class SymbolicExpression(ABC):
     def subs(self, subs: 'Dict[Symbol, Expression]', simplify: bool = True) -> 'Expression':
         new_dict = {}
         for k, v in self.__dict__.items():
-            new_dict[k] = subs_expr(v, subs, simplify=simplify)
+            if isinstance(v, tuple):
+                new_dict[k] = (subs_expr(v, subs, simplify=simplify) for v in v)
+            else:
+                new_dict[k] = subs_expr(v, subs, simplify=simplify)
         new_expr = self.__class__(**new_dict)
+        print(new_expr)
         if simplify:
-            return new_expr.simplify()
+            return simplify_expr(new_expr)
         else:
             return new_expr
     
-
 Expression = SymbolicExpression | Number
 
 def subs_expr(expr:'Expression', subs: 'Dict[Symbol, Expression]', simplify: bool = True) -> 'Expression':
@@ -61,7 +55,7 @@ def subs_expr(expr:'Expression', subs: 'Dict[Symbol, Expression]', simplify: boo
         case Number():
             return expr
 
-def simplify(expr: 'Expression') -> 'Expression':
+def simplify_expr(expr: 'Expression') -> 'Expression':
     match expr:
         case SymbolicExpression():
             return expr.simplify()
@@ -80,8 +74,8 @@ class Symbol(SymbolicExpression):
 
     def subs(self, subs: 'Dict[Symbol, Expression]', simplify : bool = True) -> 'Expression':
         out = subs.get(self, self)
-        if isinstance(out, SymbolicExpression) and simplify:
-            return out.simplify()
+        if simplify:
+            return simplify_expr(out) 
         else:
             return out
 
@@ -89,7 +83,11 @@ class Symbol(SymbolicExpression):
 class Sum(SymbolicExpression):
     terms : Tuple[Expression]
 
-    def __init__(self, *args : Tuple[Expression]):
+    def __init__(self, *args : Tuple[Expression], terms : Tuple[Expression] = None):
+        if args and terms:
+            raise ValueError("Cannot pass both args and terms")
+        if terms:
+            args = terms
         self.terms = tuple()
         for t in args:
             if isinstance(t, Sum):
@@ -101,7 +99,7 @@ class Sum(SymbolicExpression):
         return " + ".join(map(str, self.terms))
 
     def simplify(self):
-        terms_s = [simplify(t) for t in self.terms]
+        terms_s = [simplify_expr(t) for t in self.terms]
 
         numeric_term = sum([t for t in terms_s if isinstance(t, Number)])
         non_numeric_terms = [t for t in terms_s if not isinstance(t, Number)]
@@ -123,7 +121,11 @@ class Sum(SymbolicExpression):
 class Product(SymbolicExpression):
     terms : Tuple[Expression]
 
-    def __init__(self, *args : Tuple[Expression]):
+    def __init__(self, *args : Tuple[Expression], terms : Tuple[Expression] = None):
+        if args and terms:
+            raise ValueError("Cannot specify both args and terms")
+        if terms:
+            args = terms
         self.terms = tuple()
         for t in args:
             if isinstance(t, Product):
@@ -135,7 +137,7 @@ class Product(SymbolicExpression):
         return " * ".join(map(str, self.terms))
 
     def simplify(self):
-        terms_s = [simplify(t) for t in self.terms]
+        terms_s = [simplify_expr(t) for t in self.terms]
 
         numeric_term = product([t for t in terms_s if isinstance(t, Number)])
         non_numeric_terms = [t for t in terms_s if not isinstance(t, Number)]
@@ -164,8 +166,8 @@ class Power(SymbolicExpression):
         return f'{self.base}^{self.exponent}'
 
     def simplify(self):
-        base_s = simplify(self.base)
-        exponent_s = simplify(self.exponent)
+        base_s = simplify_expr(self.base)
+        exponent_s = simplify_expr(self.exponent)
         if isinstance(base_s, Number) and isinstance(exponent_s, Number):
             return base_s ** exponent_s
         elif isinstance(base_s, Number):
@@ -194,8 +196,8 @@ class Fraction(SymbolicExpression):
         return f'{self.numerator}/{self.denominator}'
 
     def simplify(self):
-        numerator_s = simplify(self.numerator)
-        denominator_s = simplify(self.denominator)
+        numerator_s = simplify_expr(self.numerator)
+        denominator_s = simplify_expr(self.denominator)
         if isinstance(denominator_s, Number) and denominator_s == 0:
             return float('inf')
         elif isinstance(numerator_s, Number) and isinstance(denominator_s, Number):

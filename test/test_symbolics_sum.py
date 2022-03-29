@@ -28,6 +28,22 @@ def test_sum_terms_are_stored():
     s = Sum(1, 2)
     assert s.terms == (1, 2)
 
+def test_sum_no_terms_simplifies_to_zero():
+    s = Sum().simplify()
+    assert s == 0
+
+def test_sum_one_symbolic_term_simplifies_to_that_symbol():
+    x = Symbol('x')
+    s = Sum(x).simplify()
+    assert s == x
+
+def test_sum_simplify_with_no_numeric_terms():
+    x = Symbol('x')
+    y = Symbol('y')
+    s = Sum(x, y).simplify()
+    assert s.terms == (x, y)
+
+
 def test_sum_one_argument_simplified_is_just_the_value():
     s = Sum(1).simplify()
     assert s == 1
