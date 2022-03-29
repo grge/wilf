@@ -20,6 +20,9 @@ class SymbolicExpression(ABC):
     
     def __sub__(self, other : 'Expression') -> 'Expression':
         return Sum(self, -other).simplify()
+
+    def __rsub__(self, other : 'Expression') -> 'Expression':
+        return Sum(other, -self).simplify()
     
     def __pow__(self, other : 'Expression') -> 'Expression':
         return Power(self, other).simplify()

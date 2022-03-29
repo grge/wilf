@@ -52,6 +52,9 @@ def test_rmul():
 def test_rsum():
     assert 2 + x == Sum(2, x)
 
+def test_rsub():
+    assert 2 - x == Sum(2, Product(-1, x))
+
 def test_rdiv():
     assert 1 / x == Fraction(1, x)
 
