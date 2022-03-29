@@ -1,11 +1,10 @@
 from dataclasses import dataclass
-from functools import lru_cache, reduce
+from functools import lru_cache
 from typing import Callable
 from numbers import Integral, Number, Real
 import cmath
 
-def product(it):
-    return reduce(lambda x, y: x * y, it, 1)
+from wilf.utils import product
 
 @dataclass
 class PowerSeries:
