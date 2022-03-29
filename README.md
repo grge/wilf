@@ -52,7 +52,9 @@ A toy probabilistic programming tool built around characteristic functions.
 ### symbolics.py
 * [ ] Better __str__. Currently only works for simple expressions, and not at all for nested expressions.
 * [ ] Some symbolic representation of basic functions are going to be needed. E.g., in powerseries.exp, there is a call to cmath.exp that currently fails when the argument is an Expression. To get around this I need an wilf.symbolics.exp. Probably also log, sin, and cos. Probably others.
-* [ ] More advanced simplification. Rational simplification, for example.
+* [ ] Rational simplification - Automatically reduce rationals to their lowest terms
+* [ ] Exponent simplification - E.g., reduce x * x * x -> x**3
+* [ ] It would be useful if subs could take numpy arrays, like sympy.lambdify
 
 
 ## References
@@ -74,8 +76,8 @@ A toy probabilistic programming tool built around characteristic functions.
 * Mnatsakanov, R. M., & Hakobyan, A. S. (2009). Recovery of distributions via moments. In Optimality (pp. 252-265). Institute of Mathematical Statistics. https://projecteuclid.org/ebook/Download?urlid=10.1214%2F09-LNMS5715&isFullBook=False
 * Devroye, L. (1986). An automatic method for generating random variates with a given characteristic function. SIAM journal on applied mathematics, 46(4), 698-719.
 * Devroye, L. (1989). On random variate generation when only moments or Fourier coefficients are known. Mathematics and Computers in Simulation, 31(1-2), 71-89. http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.15.1349&rep=rep1&type=pdf
+* https://www.researchgate.net/profile/Serge-Provost/publication/242782657_Moment-Based_Density_Approximants/links/5418b2510cf203f155adb50f/Moment-Based-Density-Approximants.pdf
 #### Empirical characteristic functions
 * https://www.webdepot.umontreal.ca/Usagers/carrascm/MonDepotPublic/carrascm/Carrasco_Kotchoni_ET2017.pdf
 * Carrasco, M., & Kotchoni, R. (2017). Efficient estimation using the characteristic function. Econometric Theory, 33(2), 479-526. https://www.webdepot.umontreal.ca/Usagers/carrascm/MonDepotPublic/carrascm/Carrasco_Kotchoni_ET2017.pdf
 * u, J. (2004). Empirical characteristic function estimation and its applications. Econometric reviews, 23(2), 93-123. http://www.mysmu.edu/faculty/yujun/Research/YuER.pdf
-* https://www.researchgate.net/profile/Serge-Provost/publication/242782657_Moment-Based_Density_Approximants/links/5418b2510cf203f155adb50f/Moment-Based-Density-Approximants.pdf
