@@ -7,35 +7,52 @@ from wilf.utils import product
 
 class SymbolicExpression(ABC):
     def __mul__(self, other : 'Expression') -> 'Expression':
+        if not isinstance(other, Expression):
+            return NotImplemented
         return Product(self, other).simplify()
 
     def __rmul__(self, other : 'Expression') -> 'Expression':
+        if not isinstance(other, Expression):
+            return NotImplemented
         return Product(other, self).simplify()
 
     def __add__(self, other : 'Expression') -> 'Expression':
+        if not isinstance(other, Expression):
+            return NotImplemented
         return Sum(self, other).simplify()
 
     def __radd__(self, other : 'Expression') -> 'Expression':
+        if not isinstance(other, Expression):
+            return NotImplemented
         return Sum(other, self).simplify()
     
     def __sub__(self, other : 'Expression') -> 'Expression':
+        if not isinstance(other, Expression):
+            return NotImplemented
         return Sum(self, -other).simplify()
 
     def __rsub__(self, other : 'Expression') -> 'Expression':
+        if not isinstance(other, Expression):
+            return NotImplemented
         return Sum(other, -self).simplify()
     
     def __pow__(self, other : 'Expression') -> 'Expression':
+        if not isinstance(other, Expression):
+            return NotImplemented
         return Power(self, other).simplify()
 
     def __neg__(self) -> 'Expression':
         return Product(-1, self).simplify()
 
     def __truediv__(self, other : 'Expression') -> 'Expression':
+        if not isinstance(other, Expression):
+            return NotImplemented
         return Fraction(self, other).simplify()
 
     def __rtruediv__(self, other : 'Expression') -> 'Expression':
+        if not isinstance(other, Expression):
+            return NotImplemented
         return Fraction(other, self).simplify()
-
 
     @abstractmethod
     def simplify(self):

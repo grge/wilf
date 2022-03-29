@@ -57,7 +57,7 @@ class PowerSeries:
                 f = lambda i: self.f(i) + other if i == 0 else self.f(i)
         return PowerSeries(f=f)
 
-    def __radd__(self, other : 'Number') -> 'PowerSeries':
+    def __radd__(self, other : 'Expression') -> 'PowerSeries':
         return self + other
             
     def __sub__(self, other : 'PowerSeries | Expression') -> 'PowerSeries':
@@ -67,7 +67,7 @@ class PowerSeries:
             case SymbolicExpression() | Number():
                 return PowerSeries(f=lambda i: self.f(i) - other if i == 0 else self.f(i))
 
-    def __rsub__(self, other : 'Number') -> 'PowerSeries':
+    def __rsub__(self, other : 'Expression') -> 'PowerSeries':
         return -self + other
 
     def __neg__(self) -> 'PowerSeries':
