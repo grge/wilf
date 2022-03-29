@@ -3,6 +3,7 @@ from functools import lru_cache
 from typing import Callable
 from numbers import Integral, Number, Real
 import cmath
+from wilf.symbolics import Expression, SymbolicExpression
 
 from wilf.utils import product
 
@@ -17,7 +18,7 @@ class PowerSeries:
     Where f is a coefficient function f :: int -> float
 
     """
-    f : Callable[int, float]
+    f : Callable[int, Expression]
 
     def __post_init__(self):
         """Post init hook. Used to memoise the coefficient function"""
@@ -48,23 +49,23 @@ class PowerSeries:
     def __call__(self, x : float, precision : int = 30):
         return sum(self.f(i) * x ** i for i in range(precision))
 
-    def __add__(self, other : 'PowerSeries') -> 'PowerSeries':
+    def __add__(self, other : 'PowerSeries | Expression') -> 'PowerSeries':
         match other:
             case PowerSeries():
                 f = lambda i: self.f(i) + other.f(i)
-            case Number():
+            case SymbolicExpression() | Number():
                 f = lambda i: self.f(i) + other if i == 0 else self.f(i)
         return PowerSeries(f=f)
 
     def __radd__(self, other : 'Number') -> 'PowerSeries':
         return self + other
             
-    def __sub__(self, other : 'PowerSeries') -> 'PowerSeries':
+    def __sub__(self, other : 'PowerSeries | Expression') -> 'PowerSeries':
         match other:
-            case Number():
-                return PowerSeries(f=lambda i: self.f(i) - other if i == 0 else self.f(i))
             case PowerSeries():
                 return PowerSeries(f=lambda i: self.f(i) - other.f(i))
+            case SymbolicExpression() | Number():
+                return PowerSeries(f=lambda i: self.f(i) - other if i == 0 else self.f(i))
 
     def __rsub__(self, other : 'Number') -> 'PowerSeries':
         return -self + other
@@ -72,25 +73,25 @@ class PowerSeries:
     def __neg__(self) -> 'PowerSeries':
         return PowerSeries(f=lambda i: -self.f(i))
 
-    def __mul__(self, other : 'Number | PowerSeries') -> 'PowerSeries':
+    def __mul__(self, other : 'Expression | PowerSeries') -> 'PowerSeries':
         match other:
-            case Number():
+            case Number() | SymbolicExpression():
                 f = lambda i: self.f(i) * other
             case PowerSeries():
                 f = lambda i : sum(self.f(j) * other.f(i - j) for j in range(i+1))
         return PowerSeries(f=f)
 
-    def __rmul__(self, other : 'Number | PowerSeries') -> 'PowerSeries':
+    def __rmul__(self, other : 'Expression | PowerSeries') -> 'PowerSeries':
         return self * other
 
-    def __truediv__(self, other : 'Number | PowerSeries') -> 'PowerSeries':
+    def __truediv__(self, other : 'Expression | PowerSeries') -> 'PowerSeries':
         match other:
             case PowerSeries():
                 return self * other.inverse() 
-            case Number():
+            case SymbolicExpression() | Number():
                 return PowerSeries(f=lambda i: self.f(i) / other)
 
-    def __rtruediv__(self, other : 'Number | PowerSeries') -> 'PowerSeries':
+    def __rtruediv__(self, other : 'Expression | PowerSeries') -> 'PowerSeries':
         return other * self.inverse()
 
     def inverse(self):
@@ -99,7 +100,7 @@ class PowerSeries:
         print(a)
         return PowerSeries(f=lambda n: sum((q**i).f(n) for i in range(n+1)) / a) 
 
-    def __pow__(self, other : 'Number') -> 'PowerSeries':
+    def __pow__(self, other : 'Expression') -> 'PowerSeries':
         # Memoised power function... Maybe there's a cleaner way to do this?
         match other:
             case Integral():
@@ -139,7 +140,7 @@ class PowerSeries:
     @classmethod
     @property
     def e(cls):
-        return cls.one.exp()
+        return exp(cls.one)
 
 
 def derivative(x:PowerSeries, n:int = 1) -> 'PowerSeries':
@@ -151,6 +152,7 @@ def derivative(x:PowerSeries, n:int = 1) -> 'PowerSeries':
 def exp(x : PowerSeries) -> PowerSeries:
     a = x.f(0)
     q = x - a
+    # TODO: Needs to support symbolic expression... 
     ea = cmath.exp(a)
     def fact(n: int):
         return product(range(1, n+1))
