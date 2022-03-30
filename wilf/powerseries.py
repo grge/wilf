@@ -152,8 +152,8 @@ def derivative(x:PowerSeries, n:int = 1) -> 'PowerSeries':
 def exp(x : PowerSeries) -> PowerSeries:
     a = x.f(0)
     q = x - a
-    # TODO: Needs to support symbolic expression... 
-    ea = cmath.exp(a)
+    # TODO: Needs to support symbolic expression... ?
+    ea = cmath.exp(1) ** a
     def fact(n: int):
         return product(range(1, n+1))
     return PowerSeries(lambda n: sum((q**i).f(n) / fact(i) for i in range(n+1)) * ea)
