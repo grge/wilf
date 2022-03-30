@@ -26,6 +26,7 @@ A toy probabilistic programming tool built around characteristic functions.
 
 * [ ] Implement __mul__, __pow__, __div__, etc
     - At this stage I'm not sure what is possible. Maybe it is only realistic to support linear / affine functions of RVs.
+    - The paper by I.J Good "The characteristic function of functions" looks promising. It seems to offer a general method for calculating CF of g(X) where the CF of X is known, and seems to have results for "powers, logarithms, exponentials, quadratic forms, and sets of quadratic forms". 
 
 * [ ] Add explicit support for discrete distributions
     - Most of the code already works for discrete distributions. It is only when I have implemented .cdf, .pdf and .rvs that I will need to have some explicit code for dealing with the discretisation.
@@ -80,17 +81,27 @@ A toy probabilistic programming tool built around characteristic functions.
 
 ### Characteristic functions
 
-#### Algebraic maniupations
+#### Algebraic manipulation
 * Good, I. J. (1968). The characeristic functions of functions. https://www.jstor.org/stable/2416209
 
-#### Inversion and sampling
+#### Inversion
 * Shephard, N. G. (1991). From characteristic function to distribution function: A simple framework. Econometric Theory, vol 7. 519-229. https://scholar.harvard.edu/files/ET91.pdf
+* Witkovský, V. (2016). Numerical inversion of a characteristic function: An alternative tool to form the probability distribution of output quantity in linear measurement models. Acta IMEKO, 5(3), 32-44. https://www.researchgate.net/profile/Viktor-Witkovsky/publication/309713869_Numerical_inversion_of_a_characteristic_function_An_alternative_tool_to_form_the_probability_distribution_of_output_quantity_in_linear_Measurement_models/links/58230e5b08aeb45b58891df6/Numerical-inversion-of-a-characteristic-function-An-alternative-tool-to-form-the-probability-distribution-of-output-quantity-in-linear-Measurement-models.pdf
+* https://www.tandfonline.com/doi/abs/10.1080/00031305.1995.10476180
+
+#### Moment based density estimation
+
+* https://www.researchgate.net/profile/Serge-Provost/publication/242782657_Moment-Based_Density_Approximants/links/5418b2510cf203f155adb50f/Moment-Based-Density-Approximants.pdf
+* Zang, Y. (2019). Advances in Moment-Based Distributional Methodologies. https://ir.lib.uwo.ca/cgi/viewcontent.cgi?article=8671&context=etd
 * Rácz, S., Tari, Á., & Telek, M. (2006). A moments based distribution bounding method. Math. Comput. Model., 43, 1367-1382. http://webspn.hit.bme.hu/~telek/cikkek/racz06a.pdf
 * Tekel, J., & Cohen, L. (2012, May). Constructing and estimating probability distributions from moments. In Automatic target recognition XXII (Vol. 8391, pp. 114-123). SPIE. https://fks.sk/~juro/docs/paper_spie_2.pdf
 * Mnatsakanov, R. M., & Hakobyan, A. S. (2009). Recovery of distributions via moments. In Optimality (pp. 252-265). Institute of Mathematical Statistics. https://projecteuclid.org/ebook/Download?urlid=10.1214%2F09-LNMS5715&isFullBook=False
+
+#### Sampling methods
 * Devroye, L. (1986). An automatic method for generating random variates with a given characteristic function. SIAM journal on applied mathematics, 46(4), 698-719.
 * Devroye, L. (1989). On random variate generation when only moments or Fourier coefficients are known. Mathematics and Computers in Simulation, 31(1-2), 71-89. http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.15.1349&rep=rep1&type=pdf
-* https://www.researchgate.net/profile/Serge-Provost/publication/242782657_Moment-Based_Density_Approximants/links/5418b2510cf203f155adb50f/Moment-Based-Density-Approximants.pdf
+* Shaw, W. T., & McCabe, J. (2009). Monte Carlo sampling given a characteristic function: quantile mechanics in momentum space. arXiv preprint arXiv:0903.1592. https://arxiv.org/pdf/0903.1592.pdf
+
 #### Empirical characteristic functions
 * https://www.webdepot.umontreal.ca/Usagers/carrascm/MonDepotPublic/carrascm/Carrasco_Kotchoni_ET2017.pdf
 * Carrasco, M., & Kotchoni, R. (2017). Efficient estimation using the characteristic function. Econometric Theory, 33(2), 479-526. https://www.webdepot.umontreal.ca/Usagers/carrascm/MonDepotPublic/carrascm/Carrasco_Kotchoni_ET2017.pdf
