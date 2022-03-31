@@ -19,10 +19,30 @@ A toy probabilistic programming tool built around characteristic functions.
 ## TODO
 
 ### rv.py
-* [ ] Implement RV.cdf() RV.pdf(), RV.rvs()
-    - One approach would be to get an explicit PowerSeries representatiof the PDF by inverting the characteristic function. I would like this to be possible, but I haven't worked it out yet. Note that is probably not straight forward to generate samples from the PowerSeries PDF representation, because of numerical instability issues.
-    - Another approach is to construct an approximation of the CDF using the first n moments. There is some literature on this available on this. Currently I think this approach is the best option.
-    - Another option is to generate samples directly from the characteristic function, using rejection sampling. There is some literature available, but I am not sure if the technique is general enough to work on arbitrary RVs.
+* [ ] Implement RV.cdf() RV.pdf(), RV.rvs(). I am aware of four general approaches:
+        - Direct inversion of the characteristic function e.g., (Sheppard 1991).
+          While this appears to be the most straight forward, the reliance on
+          integration is problematic if we can only use the first n terms of the
+          characteristic function.  Even if n is very large, we can't integrate
+          over the whole range, or even over most of it. Note, there are also
+          techniques out there for going straight to the quantile function from
+          the characteristic function (Shaw and McCabe 2009) 
+        - Use moments to generate the approximants. This, so far, appears to be
+          the most likely approach. The general technique is to use optimisation
+          (usually linear least squares) to fit a sum of polynomials, potentially
+          combined in some way with a base distribution, to the desired PDF by
+          matching the moments. Some regularisation is needed to make the output
+          a bona fide distribution, then quadrature integration is used to
+          get the CDF, then the quantile function is generated, and random samples
+          can be generated.
+        - The third approach, which I haven't found any literature on, would be
+          to find the coefficients of the series expansion CDF or PDF in terms
+          of the moments, or of the coefficients of the series expansion of the
+          characteristic function. If this is possible, and if it avoids the
+          numerical numerical stability problems mentioned in option 1, then I 
+          think this is the best approach, but I don't know how to do it yet.
+        - Finally, there is Devroye's work on generating random samples from
+          just the moments. 
 
 * [ ] Implement __mul__, __pow__, __div__, etc
     - At this stage I'm not sure what is possible. Maybe it is only realistic to support linear / affine functions of RVs.
@@ -34,6 +54,8 @@ A toy probabilistic programming tool built around characteristic functions.
 * [ ] Inference.
     - This will require having power series with symbols. The naive approach would be to do something like maximum likelihood estimation, but there appears to be other approaches in the literature based around the empirical characteristic function.
     - As of 2022-03-29, I have implemented a basic symbolic computer algebra system, and modified the powerseries implementation so that the coefficient functions have be Expression valued. Not yet confirmed to be working for all functionality, but it is a promising start.
+    - I could probably use a generic optimiser along with the method of moments
+
 
 * [ ] Prior distributions for model parameters
     - I currently have no idea how to do this. Probably possible, but I don't know how yet. Would they need to be conjugate? Probably not?
@@ -88,6 +110,8 @@ A toy probabilistic programming tool built around characteristic functions.
 * Shephard, N. G. (1991). From characteristic function to distribution function: A simple framework. Econometric Theory, vol 7. 519-229. https://scholar.harvard.edu/files/ET91.pdf
 * Witkovský, V. (2016). Numerical inversion of a characteristic function: An alternative tool to form the probability distribution of output quantity in linear measurement models. Acta IMEKO, 5(3), 32-44. https://www.researchgate.net/profile/Viktor-Witkovsky/publication/309713869_Numerical_inversion_of_a_characteristic_function_An_alternative_tool_to_form_the_probability_distribution_of_output_quantity_in_linear_Measurement_models/links/58230e5b08aeb45b58891df6/Numerical-inversion-of-a-characteristic-function-An-alternative-tool-to-form-the-probability-distribution-of-output-quantity-in-linear-Measurement-models.pdf
 * https://www.tandfonline.com/doi/abs/10.1080/00031305.1995.10476180
+* Shaw, W. T., & McCabe, J. (2009). Monte Carlo sampling given a characteristic function: quantile mechanics in momentum space. arXiv preprint arXiv:0903.1592. https://arxiv.org/pdf/0903.1592.pdf
+
 
 #### Moment based density estimation
 
@@ -100,8 +124,6 @@ A toy probabilistic programming tool built around characteristic functions.
 #### Sampling methods
 * Devroye, L. (1986). An automatic method for generating random variates with a given characteristic function. SIAM journal on applied mathematics, 46(4), 698-719.
 * Devroye, L. (1989). On random variate generation when only moments or Fourier coefficients are known. Mathematics and Computers in Simulation, 31(1-2), 71-89. http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.15.1349&rep=rep1&type=pdf
-* Shaw, W. T., & McCabe, J. (2009). Monte Carlo sampling given a characteristic function: quantile mechanics in momentum space. arXiv preprint arXiv:0903.1592. https://arxiv.org/pdf/0903.1592.pdf
-
 #### Empirical characteristic functions
 * https://www.webdepot.umontreal.ca/Usagers/carrascm/MonDepotPublic/carrascm/Carrasco_Kotchoni_ET2017.pdf
 * Carrasco, M., & Kotchoni, R. (2017). Efficient estimation using the characteristic function. Econometric Theory, 33(2), 479-526. https://www.webdepot.umontreal.ca/Usagers/carrascm/MonDepotPublic/carrascm/Carrasco_Kotchoni_ET2017.pdf
