@@ -20,29 +20,10 @@ A toy probabilistic programming tool built around characteristic functions.
 
 ### rv.py
 * [ ] Implement RV.cdf() RV.pdf(), RV.rvs(). I am aware of four general approaches:
-        - Direct inversion of the characteristic function e.g., (Sheppard 1991).
-          While this appears to be the most straight forward, the reliance on
-          integration is problematic if we can only use the first n terms of the
-          characteristic function.  Even if n is very large, we can't integrate
-          over the whole range, or even over most of it. Note, there are also
-          techniques out there for going straight to the quantile function from
-          the characteristic function (Shaw and McCabe 2009) 
-        - Use moments to generate the approximants. This, so far, appears to be
-          the most likely approach. The general technique is to use optimisation
-          (usually linear least squares) to fit a sum of polynomials, potentially
-          combined in some way with a base distribution, to the desired PDF by
-          matching the moments. Some regularisation is needed to make the output
-          a bona fide distribution, then quadrature integration is used to
-          get the CDF, then the quantile function is generated, and random samples
-          can be generated.
-        - The third approach, which I haven't found any literature on, would be
-          to find the coefficients of the series expansion CDF or PDF in terms
-          of the moments, or of the coefficients of the series expansion of the
-          characteristic function. If this is possible, and if it avoids the
-          numerical numerical stability problems mentioned in option 1, then I 
-          think this is the best approach, but I don't know how to do it yet.
-        - Finally, there is Devroye's work on generating random samples from
-          just the moments. 
+    - Direct inversion of the characteristic function e.g., (Sheppard 1991).  While this appears to be the most straight forward, the reliance on integration is problematic if we can only use the first n terms of the characteristic function.  Even if n is very large, we can't integrate over the whole range, or even over most of it. Note, there are also techniques out there for going straight to the quantile function from the characteristic function (Shaw and McCabe 2009) 
+    - Use moments to generate the approximants. This, so far, appears to be the most likely approach. The general technique is to use optimisation (usually linear least squares) to fit a sum of polynomials, potentially combined in some way with a base distribution, to the desired PDF by matching the moments. Some regularisation is needed to make the output a bona fide distribution, then quadrature integration is used to get the CDF, then the quantile function is generated, and random samples can be generated.
+    - The third approach, which I haven't found any literature on, would be to find the coefficients of the series expansion CDF or PDF in terms of the moments, or of the coefficients of the series expansion of the characteristic function. If this is possible, and if it avoids the numerical numerical stability problems mentioned in option 1, then I think this is the best approach, but I don't know how to do it yet.
+    - Finally, there is Devroye's work on generating random samples from just the moments. 
 
 * [ ] Implement __mul__, __pow__, __div__, etc
     - At this stage I'm not sure what is possible. Maybe it is only realistic to support linear / affine functions of RVs.
@@ -52,6 +33,7 @@ A toy probabilistic programming tool built around characteristic functions.
     - Most of the code already works for discrete distributions. It is only when I have implemented .cdf, .pdf and .rvs that I will need to have some explicit code for dealing with the discretisation.
 
 * [ ] Inference.
+
     - This will require having power series with symbols. The naive approach would be to do something like maximum likelihood estimation, but there appears to be other approaches in the literature based around the empirical characteristic function.
     - As of 2022-03-29, I have implemented a basic symbolic computer algebra system, and modified the powerseries implementation so that the coefficient functions have be Expression valued. Not yet confirmed to be working for all functionality, but it is a promising start.
     - I could probably use a generic optimiser along with the method of moments
