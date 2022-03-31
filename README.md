@@ -12,10 +12,6 @@ A toy probabilistic programming tool built around characteristic functions.
     print(z.mean(), z.var())
 ```
 
-
-## Features
-
-
 ## TODO
 
 ### rv.py
