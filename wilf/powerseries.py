@@ -149,6 +149,18 @@ def derivative(x:PowerSeries, n:int = 1) -> 'PowerSeries':
     return PowerSeries(f=f)
 
 
+def integral(x:PowerSeries, n:int = 1) -> PowerSeries:
+    if n != 1:
+        raise NotImplementedError("Haven't gotten around to higher order integrals yet. You'll just need to call it multiple times.")
+
+    def f(k: int):
+        if k == 0:
+            return 0
+        else:
+            return x.f(k-1) / k
+    return PowerSeries(f=f)
+
+
 def exp(x : PowerSeries) -> PowerSeries:
     a = x.f(0)
     q = x - a
