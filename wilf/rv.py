@@ -1,14 +1,18 @@
 from dataclasses import dataclass
 from numbers import Number
-from typing import List
+from typing import List, Tuple
+
+import numpy as np
 
 from wilf.powerseries import PowerSeries, exp, derivative
+from wilf.density import provost_estimate
 
 @dataclass
 class RV:
     """A random variable defined by its characteristic function"""
     # characteristic function
     cf : PowerSeries
+    support : Tuple[float, float]
 
     def moment(self, k:int) -> float:
         return (1j ** (-k)) * derivative(self.cf, k).f(0)
@@ -22,9 +26,31 @@ class RV:
     def std(self):
         return self.var() ** 0.5
 
-    def __add__(self, other: 'RV') -> 'RV':
-        return RV(self.cf * other.cf)
+    def pdf(self, x):
+        return provost_estimate(self)(x)
 
+    def __add__(self, other: 'RV | Number') -> 'RV':
+        match other:
+            case RV():
+                return RV(
+                    cf=self.cf * other.cf,
+                    support=(
+                        self.support[0] + other.support[0],
+                        self.support[1] + other.support[1]
+                    )
+                )
+            case Number():
+                return NotImplemented
+
+    def __mul__(self, other: 'RV | Number') -> 'RV':
+        match other:
+            case RV():
+                return NotImplemented
+            case Number():
+                return RV(
+                    cf=lambda i: self.cf(i)*other, 
+                    support=(self.support[0]*other, self.support[1]*other)
+                )
 
 
 x = PowerSeries.x
@@ -36,22 +62,22 @@ x = PowerSeries.x
 # fundamentally the same, but will need some explicit discretisation of the
 # random variates generated, which I will worry about how to do later on.
 def binomial(n, p) -> RV:
-    return RV(exp(1 - p + p * (x * 1j))**n)
+    return RV(cf=exp(1 - p + p * (x * 1j))**n, support=(0, n))
 
 def poisson(l) -> RV:
-    return RV(exp((exp(x * 1j) - 1) * l))
+    return RV(cf=exp((exp(x * 1j) - 1) * l), support=(0, np.inf))
 
 def uniform(a, b) -> RV:
-    return RV((exp(1j * b * x) - exp(1j * a * x)) / (1j * x * (b - a)))
+    return RV(cf=(exp(1j * b * x) - exp(1j * a * x)) / (1j * x * (b - a)), support=(a, b))
 
 def normal(m, s) -> RV:
-    return RV(exp((1J * x * m) - (0.5 * s**2 * x**2)))
+    return RV(cf=exp((1J * x * m) - (0.5 * s**2 * x**2)), support=(-np.inf, np.inf))
 
 def exponential(l) -> RV:
-    return RV(1/(1 - 1J * x * 1/l))
+    return RV(cf=1/(1 - 1J * x * 1/l), support=(0, np.inf))
 
 def gamma(k, theta) -> RV:
-    return RV((1 - 1j*x*theta)**(-k))
+    return RV(cf=(1 - 1j*x*theta)**(-k), support=(0, np.inf))
 
 def empirical(data : List[Number]) -> RV:
-    return RV(sum(exp(1J * x * d) for d in data)/len(data))
+    return RV(cf=sum(exp(1J * x * d) for d in data)/len(data), support=(min(data), max(data)))
