@@ -39,3 +39,4 @@ We've got generating functions.
 * Grahah; Kunoth; Patashnik (1994). Concrete Mathematics. Addison-Wesley.
 * Wilf, James. (2008). Generatingfunctionology. Retrieved from https://www2.math.upenn.edu/~wilf/gfology2.pdf
 * Jiszka, Jason. (2013). Infinite lazy polynomials. Retrieved from http://blog.jliszka.org/2013/10/31/infinite-lazy-polynomials.html
+* M. Douglas Mcilroy, (2000). The music of streams. http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.37.2313
